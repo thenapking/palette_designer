@@ -18,7 +18,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_16_135823) do
     t.string "hex", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["palette_id", "position"], name: "index_colour_stops_on_palette_id_and_position", unique: true
     t.index ["palette_id"], name: "index_colour_stops_on_palette_id"
   end
 

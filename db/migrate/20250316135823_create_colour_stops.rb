@@ -9,8 +9,6 @@ class CreateColourStops < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
-    
-    add_index :colour_stops, [:palette_id, :position], unique: true
   end
 end
 

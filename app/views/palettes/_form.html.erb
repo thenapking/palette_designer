@@ -15,9 +15,9 @@
     <%= form.text_field :name, class: "form-input" %>
   </div>
   
-  <h3>Color Stops</h3>
+  <h3>Colour Stops</h3>
   <template data-nested-form-target="template">
-    <%= form.fields_for :colour_stops, ColorStop.new, child_index: 'NEW_RECORD' do |colour_stop_fields| %>
+    <%= form.fields_for :colour_stops, ColourStop.new, child_index: 'NEW_RECORD' do |colour_stop_fields| %>
       <%= render "colour_stop_form", f: colour_stop_fields %>
     <% end %>
   </template>
@@ -51,8 +51,8 @@
         const colours = [];
         
         document.querySelectorAll('.colour-stop-fields').forEach(el => {
-          const positionInput = el.querySelector('input[name*="position_percent"]');
-          const colourInput = el.querySelector('input[name*="colour_hex"]');
+          const positionInput = el.querySelector('input[name*="percentage"]');
+          const colourInput = el.querySelector('input[name*="hex"]');
           
           if (positionInput && colourInput) {
             const position = parseFloat(positionInput.value) || 0;
@@ -70,20 +70,20 @@
         pairs.sort((a, b) => a.stop - b.stop);
         
         const sortedStops = pairs.map(p => p.stop);
-        const sortedColors = pairs.map(p => p.colour);
+        const sortedColours = pairs.map(p => p.colour);
         
         // Update preview
         const preview = document.getElementById('palette-preview');
         if (preview) {
           // Create gradient stops
           const gradientStops = sortedStops.map((stop, index) => {
-            return `${sortedColors[index]} ${stop * 100}%`;
+            return `${sortedColours[index]} ${stop * 100}%`;
           }).join(', ');
           
           preview.style.background = `linear-gradient(to right, ${gradientStops})`;
           
           // Draw circles
-          drawCircles(preview, sortedStops, sortedColors);
+          drawCircles(preview, sortedStops, sortedColours);
         }
       }
       
@@ -121,7 +121,7 @@
       
       // Set up event listeners
       document.addEventListener('input', e => {
-        if (e.target.matches('input[name*="position_percent"], input[name*="colour_hex"]')) {
+        if (e.target.matches('input[name*="percentage"], input[name*="hex"]')) {
           updatePreview();
         }
       });

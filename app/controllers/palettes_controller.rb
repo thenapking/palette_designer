@@ -15,8 +15,8 @@ class PalettesController < ApplicationController
 
   def new
     @palette = Palette.new
-    @palette.colour_stops.build(position: 0, position_percent: 0, colour_hex: "#FF0000")
-    @palette.colour_stops.build(position: 1, position_percent: 1, colour_hex: "#0000FF")
+    @palette.colour_stops.build(position: 0, percentage: 0, hex: "#FF0000")
+    @palette.colour_stops.build(position: 1, percentage: 1, hex: "#0000FF")
   end
 
   def create
@@ -63,7 +63,7 @@ class PalettesController < ApplicationController
   def palette_params
     params.require(:palette).permit(
       :name,
-      colour_stops_attributes: [:id, :position_percent, :colour_hex, :_destroy]
+      colour_stops_attributes: [:id, :position, :percentage, :hex, :_destroy]
     )
   end
 end

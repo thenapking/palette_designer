@@ -1,13 +1,13 @@
 <!-- app/views/palettes/index.html.erb -->
-<h1>Color Palettes</h1>
+<h1>Colour Palettes</h1>
 
 <div class="palettes-list">
   <% @palettes.each do |palette| %>
     <div class="palette-item">
       <h3><%= palette.name %></h3>
       
-      <div class="palette-preview" data-stops="<%= palette.colour_stops.order(:position).pluck(:position_percent).to_json %>" 
-           data-colours="<%= palette.colour_stops.order(:position).pluck(:colour_hex).to_json %>">
+      <div class="palette-preview" data-stops="<%= palette.colour_stops.order(:position).pluck(:percentage).to_json %>" 
+           data-colours="<%= palette.colour_stops.order(:position).pluck(:hex).to_json %>">
       </div>
       
       <div class="palette-actions">

@@ -31,8 +31,8 @@ class Palette < ApplicationRecord
   
   def to_json_palette
     {
-      stops: colour_stops.order(:position).pluck(:position_percent),
-      colours: colour_stops.order(:position).pluck(:colour_hex)
+      stops: colour_stops.order(:position).pluck(:percentage),
+      colours: colour_stops.order(:position).pluck(:hex)
     }
   end
 end

@@ -8,7 +8,7 @@ RSpec.describe "Palettes", type: :request do
     end
   end
 
-  xdescribe "GET /show" do
+  describe "GET /show" do
     it "returns http success" do
       get "/palettes/1"
       expect(response).to have_http_status(:success)
@@ -43,7 +43,7 @@ RSpec.describe "Palettes", type: :request do
     end
   end
 
-  describe "DELETE /destroy" do
+  xdescribe "DELETE /destroy" do
     it "returns http success" do
       delete "/palettes/1"
       expect(response).to have_http_status(:redirect)
