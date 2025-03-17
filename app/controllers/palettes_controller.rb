@@ -3,7 +3,7 @@ class PalettesController < ApplicationController
   before_action :set_palette, only: [:show, :edit, :update, :destroy, :move]
 
   def index
-    @palettes = Palette.all.includes(:color_stops)
+    @palettes = Palette.all.includes(:colour_stops)
   end
 
   def show
@@ -15,8 +15,8 @@ class PalettesController < ApplicationController
 
   def new
     @palette = Palette.new
-    @palette.color_stops.build(position: 0, position_percent: 0, color_hex: "#FF0000")
-    @palette.color_stops.build(position: 1, position_percent: 1, color_hex: "#0000FF")
+    @palette.colour_stops.build(position: 0, position_percent: 0, colour_hex: "#FF0000")
+    @palette.colour_stops.build(position: 1, position_percent: 1, colour_hex: "#0000FF")
   end
 
   def create
@@ -63,7 +63,7 @@ class PalettesController < ApplicationController
   def palette_params
     params.require(:palette).permit(
       :name,
-      color_stops_attributes: [:id, :position_percent, :color_hex, :_destroy]
+      colour_stops_attributes: [:id, :position_percent, :colour_hex, :_destroy]
     )
   end
 end

@@ -11,15 +11,15 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.2].define(version: 2025_03_16_135823) do
-  create_table "color_stops", force: :cascade do |t|
+  create_table "colour_stops", force: :cascade do |t|
     t.integer "palette_id", null: false
     t.integer "position", null: false
-    t.float "position_percent", null: false
-    t.string "color_hex", null: false
+    t.float "percentage", null: false
+    t.string "hex", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["palette_id", "position"], name: "index_color_stops_on_palette_id_and_position", unique: true
-    t.index ["palette_id"], name: "index_color_stops_on_palette_id"
+    t.index ["palette_id", "position"], name: "index_colour_stops_on_palette_id_and_position", unique: true
+    t.index ["palette_id"], name: "index_colour_stops_on_palette_id"
   end
 
   create_table "palettes", force: :cascade do |t|
@@ -29,5 +29,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_16_135823) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "color_stops", "palettes"
+  add_foreign_key "colour_stops", "palettes"
 end

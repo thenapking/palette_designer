@@ -6,8 +6,8 @@
     <div class="palette-item">
       <h3><%= palette.name %></h3>
       
-      <div class="palette-preview" data-stops="<%= palette.color_stops.order(:position).pluck(:position_percent).to_json %>" 
-           data-colors="<%= palette.color_stops.order(:position).pluck(:color_hex).to_json %>">
+      <div class="palette-preview" data-stops="<%= palette.colour_stops.order(:position).pluck(:position_percent).to_json %>" 
+           data-colours="<%= palette.colour_stops.order(:position).pluck(:colour_hex).to_json %>">
       </div>
       
       <div class="palette-actions">
@@ -29,11 +29,11 @@
     document.addEventListener('turbo:load', () => {
       document.querySelectorAll('.palette-preview').forEach(el => {
         const stops = JSON.parse(el.dataset.stops);
-        const colors = JSON.parse(el.dataset.colors);
+        const colours = JSON.parse(el.dataset.colours);
         
-        // Create a gradient based on stops and colors
+        // Create a gradient based on stops and colours
         const gradientStops = stops.map((stop, index) => {
-          return `${colors[index]} ${stop * 100}%`;
+          return `${colours[index]} ${stop * 100}%`;
         }).join(', ');
         
         el.style.background = `linear-gradient(to right, ${gradientStops})`;
