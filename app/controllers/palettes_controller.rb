@@ -45,15 +45,6 @@ class PalettesController < ApplicationController
     redirect_to palettes_path, notice: 'Palette was successfully deleted.'
   end
   
-  def move
-    direction = params[:direction]
-    stop_id = params[:stop_id]
-    
-    @palette.move(stop_id, direction)
-    
-    redirect_to edit_palette_path(@palette)
-  end
-
   private
   
   def set_palette
