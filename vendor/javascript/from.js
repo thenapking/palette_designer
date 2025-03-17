@@ -1,0 +1,4 @@
+// from@0.1.7 downloaded from https://ga.jspm.io/npm:from@0.1.7/index.js
+
+import e from"stream";import t from"process";var r={};var n=t;var a=e;r=function from(e){if(Array.isArray(e)){var t=0,r=e.length;return from((function(n){t<r?this.emit("data",e[t++]):this.emit("end");return true}))}var d=new a,s=0;d.ended=false;d.started=false;d.readable=true;d.writable=false;d.paused=false;d.ended=false;d.pause=function(){d.started=true;d.paused=true};function next(){d.started=true;if(!d.ended)while(!d.ended&&!d.paused&&e.call(d,s++,(function(){d.ended||d.paused||n.nextTick(next)})));}d.resume=function(){d.started=true;d.paused=false;next()};d.on("end",(function(){d.ended=true;d.readable=false;n.nextTick(d.destroy)}));d.destroy=function(){d.ended=true;d.emit("close")};n.nextTick((function(){d.started||d.resume()}));return d};var d=r;export default d;
+

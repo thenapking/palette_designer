@@ -1,0 +1,4 @@
+// basic-auth@2.0.1 downloaded from https://ga.jspm.io/npm:basic-auth@2.0.1/index.js
+
+import e from"safe-buffer";var r={};var t=e.Buffer;r=auth;r.parse=parse;var a=/^ *(?:[Bb][Aa][Ss][Ii][Cc]) +([A-Za-z0-9._~+/-]+=*) *$/;var o=/^([^:]*):(.*)$/;function auth(e){if(!e)throw new TypeError("argument req is required");if("object"!==typeof e)throw new TypeError("argument req is required to be an object");var r=getAuthorization(e);return parse(r)}function decodeBase64(e){return t.from(e,"base64").toString()}function getAuthorization(e){if(!e.headers||"object"!==typeof e.headers)throw new TypeError("argument req is required to have headers property");return e.headers.authorization}function parse(e){if("string"===typeof e){var r=a.exec(e);if(r){var t=o.exec(decodeBase64(r[1]));if(t)return new Credentials(t[1],t[2])}}}function Credentials(e,r){this.name=e;this.pass=r}var i=r;const n=r.parse;export default i;export{n as parse};
+
