@@ -7,10 +7,10 @@ class Palette < ApplicationRecord
   accepts_nested_attributes_for :colour_stops, allow_destroy: true, reject_if: :all_blank
  
 
-  def to_json_palette
+  def to_json
     {
       stops: colour_stops.order(:position).pluck(:percentage),
       colours: colour_stops.order(:position).pluck(:hex)
-    }
+    }.to_json
   end
 end
