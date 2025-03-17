@@ -1,0 +1,137 @@
+<%= form_with model: @palette, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |form| %>
+  <% if palette.errors.any? %>
+    <div class="error-messages">
+      <h2><%= pluralize(palette.errors.count, "error") %> prohibited this palette from being saved:</h2>
+      <ul>
+        <% palette.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: "form-input" %>
+  </div>
+  
+  <h3>Color Stops</h3>
+  <template data-nested-form-target="template">
+    <%= form.fields_for :color_stops, ColorStop.new, child_index: 'NEW_RECORD' do |color_stop_fields| %>
+      <%= render "color_stop_form", f: color_stop_fields %>
+    <% end %>
+  </template>
+
+  <%= form.fields_for :color_stops do |color_stop_fields| %>
+    <%= render "color_stop_form", f: color_stop_fields %>
+  <% end %>
+
+  <div data-nested-form-target="target"></div>
+
+  <button type="button" data-action="nested-form#add">Add color_stop</button>
+
+  <%= form.submit 'Save color_stops' %>
+
+  
+  <div class="field">
+    <h3>Preview</h3>
+    <div id="palette-preview" class="preview-container"></div>
+  </div>
+  
+  <div class="actions">
+    <%= form.submit class: "button" %>
+  </div>
+<% end %>
+
+<%= content_for :scripts do %>
+  <script>
+    document.addEventListener('turbo:load', () => {
+      function updatePreview() {
+        const stops = [];
+        const colors = [];
+        
+        document.querySelectorAll('.color-stop-fields').forEach(el => {
+          const positionInput = el.querySelector('input[name*="position_percent"]');
+          const colorInput = el.querySelector('input[name*="color_hex"]');
+          
+          if (positionInput && colorInput) {
+            const position = parseFloat(positionInput.value) || 0;
+            const color = colorInput.value || '#000000';
+            
+            if (!isNaN(position) && position >= 0 && position <= 1) {
+              stops.push(position);
+              colors.push(color);
+            }
+          }
+        });
+        
+        // Sort by position
+        const pairs = stops.map((stop, index) => ({ stop, color: colors[index] }));
+        pairs.sort((a, b) => a.stop - b.stop);
+        
+        const sortedStops = pairs.map(p => p.stop);
+        const sortedColors = pairs.map(p => p.color);
+        
+        // Update preview
+        const preview = document.getElementById('palette-preview');
+        if (preview) {
+          // Create gradient stops
+          const gradientStops = sortedStops.map((stop, index) => {
+            return `${sortedColors[index]} ${stop * 100}%`;
+          }).join(', ');
+          
+          preview.style.background = `linear-gradient(to right, ${gradientStops})`;
+          
+          // Draw circles
+          drawCircles(preview, sortedStops, sortedColors);
+        }
+      }
+      
+      function drawCircles(container, stops, colors) {
+        // Clear previous circles
+        const existingCanvas = container.querySelector('canvas');
+        if (existingCanvas) {
+          existingCanvas.remove();
+        }
+        
+        const canvas = document.createElement('canvas');
+        const width = container.offsetWidth;
+        const height = 100;
+        canvas.width = width;
+        canvas.height = height;
+        container.appendChild(canvas);
+        
+        const ctx = canvas.getContext('2d');
+        const circleCount = 50;
+        const size = width / circleCount;
+        
+        // Create scale function using chroma.js
+        const scale = chroma.scale(colors).domain(stops).mode('lab');
+        
+        for (let i = 0; i < circleCount; i++) {
+          const value = i / (circleCount - 1);
+          const color = scale(value).hex();
+          
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.arc(i * size + size/2, height/2, size * 0.4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      
+      // Set up event listeners
+      document.addEventListener('input', e => {
+        if (e.target.matches('input[name*="position_percent"], input[name*="color_hex"]')) {
+          updatePreview();
+        }
+      });
+      
+      // Initial preview update
+      updatePreview();
+      
+      // Handle cocoon events
+      document.addEventListener('cocoon:after-insert', updatePreview);
+      document.addEventListener('cocoon:after-remove', updatePreview);
+    });
+  </script>
+<% end %>

@@ -1,0 +1,25 @@
+<h1><%= @palette&.name %></h1>
+
+<div id="palette-display"></div>
+
+<div class="actions">
+  <% if @palette %>
+    <%= link_to "Edit", edit_palette_path(@palette) %>
+    <%= link_to "Export JSON", palette_path(@palette, format: :json), class: "button", data: { turbo: false } %>
+    <%= link_to "Delete", palette_path(@palette), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "button delete" %>
+  <% end %>
+  <%= link_to "Back to List", palettes_path %>
+
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('palette-display');
+    const palette = <%= raw @palette&.data.to_json %>;
+    
+    const designer = new PaletteDesigner(container, {
+      initialPalette: palette,
+      readOnly: true
+    });
+  });
+</script>

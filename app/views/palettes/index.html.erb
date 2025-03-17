@@ -1,0 +1,43 @@
+<!-- app/views/palettes/index.html.erb -->
+<h1>Color Palettes</h1>
+
+<div class="palettes-list">
+  <% @palettes.each do |palette| %>
+    <div class="palette-item">
+      <h3><%= palette.name %></h3>
+      
+      <div class="palette-preview" data-stops="<%= palette.color_stops.order(:position).pluck(:position_percent).to_json %>" 
+           data-colors="<%= palette.color_stops.order(:position).pluck(:color_hex).to_json %>">
+      </div>
+      
+      <div class="palette-actions">
+        <%= link_to "View", palette_path(palette), class: "button" %>
+        <%= link_to "Edit", edit_palette_path(palette), class: "button" %>
+        <%= link_to "Delete", palette_path(palette), class: "button delete", 
+                    data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="actions">
+  <%= link_to "Create New Palette", new_palette_path, class: "button" %>
+</div>
+
+<%= content_for :scripts do %>
+  <script>
+    document.addEventListener('turbo:load', () => {
+      document.querySelectorAll('.palette-preview').forEach(el => {
+        const stops = JSON.parse(el.dataset.stops);
+        const colors = JSON.parse(el.dataset.colors);
+        
+        // Create a gradient based on stops and colors
+        const gradientStops = stops.map((stop, index) => {
+          return `${colors[index]} ${stop * 100}%`;
+        }).join(', ');
+        
+        el.style.background = `linear-gradient(to right, ${gradientStops})`;
+      });
+    });
+  </script>
+<% end %>
