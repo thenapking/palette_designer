@@ -1,7 +1,6 @@
 <%= form_with model: @palette, data: { controller: "palette-form nested-form",
      nested_form_wrapper_selector_value: ".nested-form-wrapper",
-     action: "input->palette-form#update change->palette-form#update" } 
-     do |form| %>
+     action: "input->palette-form#update change->palette-form#update" } do |form| %>
 
   <% if palette.errors.any? %>
     <div class="error-messages">
