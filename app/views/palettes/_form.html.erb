@@ -1,4 +1,8 @@
-<%= form_with model: @palette, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |form| %>
+<%= form_with model: @palette, data: { controller: "palette-form nested-form",
+     nested_form_wrapper_selector_value: ".nested-form-wrapper",
+     action: "input->palette-form#update change->palette-form#update" } 
+     do |form| %>
+
   <% if palette.errors.any? %>
     <div class="error-messages">
       <h2><%= pluralize(palette.errors.count, "error") %> prohibited this palette from being saved:</h2>
@@ -17,7 +21,7 @@
   
   <h3>Colour Stops</h3>
   <template data-nested-form-target="template">
-    <%= form.fields_for :colour_stops, ColourStop.new, child_index: 'NEW_RECORD' do |colour_stop_fields| %>
+    <%= form.fields_for :colour_stops, @palette.next_colour_stop, child_index: 'NEW_RECORD' do |colour_stop_fields| %>
       <%= render "colour_stop_form", f: colour_stop_fields %>
     <% end %>
   </template>
@@ -39,97 +43,4 @@
   <div class="actions">
     <%= form.submit class: "button" %>
   </div>
-<% end %>
-
-<%= content_for :scripts do %>
-  <script>
-    document.addEventListener('turbo:load', () => {
-      function updatePreview() {
-        const stops = [];
-        const colours = [];
-        
-        document.querySelectorAll('.colour-stop-fields').forEach(el => {
-          const positionInput = el.querySelector('input[name*="percentage"]');
-          const colourInput = el.querySelector('input[name*="hex"]');
-          
-          if (positionInput && colourInput) {
-            const position = parseFloat(positionInput.value) || 0;
-            const colour = colourInput.value || '#000000';
-            
-            if (!isNaN(position) && position >= 0 && position <= 1) {
-              stops.push(position);
-              colours.push(colour);
-            }
-          }
-        });
-        
-        // Sort by position
-        const pairs = stops.map((stop, index) => ({ stop, colour: colours[index] }));
-        pairs.sort((a, b) => a.stop - b.stop);
-        
-        const sortedStops = pairs.map(p => p.stop);
-        const sortedColours = pairs.map(p => p.colour);
-        
-        // Update preview
-        const preview = document.getElementById('palette-preview');
-        if (preview) {
-          // Create gradient stops
-          const gradientStops = sortedStops.map((stop, index) => {
-            return `${sortedColours[index]} ${stop * 100}%`;
-          }).join(', ');
-          
-          preview.style.background = `linear-gradient(to right, ${gradientStops})`;
-          
-          // Draw circles
-          drawCircles(preview, sortedStops, sortedColours);
-        }
-      }
-      
-      function drawCircles(container, stops, colours) {
-        // Clear previous circles
-        const existingCanvas = container.querySelector('canvas');
-        if (existingCanvas) {
-          existingCanvas.remove();
-        }
-        
-        const canvas = document.createElement('canvas');
-        const width = container.offsetWidth;
-        const height = 100;
-        canvas.width = width;
-        canvas.height = height;
-        container.appendChild(canvas);
-        
-        const ctx = canvas.getContext('2d');
-        const circleCount = 50;
-        const size = width / circleCount;
-        
-        // Create scale function using chroma.js
-        const scale = chroma.scale(colours).domain(stops).mode('lab');
-        
-        for (let i = 0; i < circleCount; i++) {
-          const value = i / (circleCount - 1);
-          const colour = scale(value).hex();
-          
-          ctx.fillStyle = colour;
-          ctx.beginPath();
-          ctx.arc(i * size + size/2, height/2, size * 0.4, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-      
-      // Set up event listeners
-      document.addEventListener('input', e => {
-        if (e.target.matches('input[name*="percentage"], input[name*="hex"]')) {
-          updatePreview();
-        }
-      });
-      
-      // Initial preview update
-      updatePreview();
-      
-      // Handle cocoon events
-      document.addEventListener('cocoon:after-insert', updatePreview);
-      document.addEventListener('cocoon:after-remove', updatePreview);
-    });
-  </script>
 <% end %>

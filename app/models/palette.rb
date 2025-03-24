@@ -13,4 +13,15 @@ class Palette < ApplicationRecord
       colours: colour_stops.order(:position).pluck(:hex)
     }
   end
+
+  def next_colour_stop
+    next_position = last_colour_stop&.position.to_i + 1
+    next_percentage = last_colour_stop&.percentage.to_f + 0.1
+
+    colour_stops.build(position: next_position, percentage: next_percentage, hex: last_colour_stop&.hex)
+  end 
+
+  def last_colour_stop
+    colour_stops.order(:position).last
+  end
 end

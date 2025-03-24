@@ -1,9 +1,7 @@
-<!-- app/views/palettes/edit.html.erb -->
 <h1>Edit Palette: <%= @palette.name %></h1>
 
 <%= render 'form', palette: @palette %>
 
 <div class="actions">
-  <%= link_to "Back to View", palette_path(@palette), class: "button" %>
-  <%= link_to "Back to List", palettes_path, class: "button" %>
+  <%= link_to "Index", palettes_path, class: "button" %>
 </div>

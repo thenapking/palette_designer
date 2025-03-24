@@ -33,10 +33,31 @@ class PalettesController < ApplicationController
   end
 
   def update
+    @palette = Palette.find(params[:id])
+
     if @palette.update(palette_params)
-      redirect_to @palette, notice: 'Palette was successfully updated.'
+      respond_to do |format|
+        # format.turbo_stream do
+        #   puts 'turbo_stream'
+        #   render turbo_stream: turbo_stream.replace(
+        #     "preview",
+        #     partial: "palettes/preview",
+        #     locals: { palette: @palette }
+        #   )
+        # end
+        format.html { redirect_to @palette, notice: "Palette was successfully updated." }
+      end
     else
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            "preview",
+            partial: "palettes/preview",
+            locals: { palette: @palette }
+          ), status: :unprocessable_entity
+        end
+        format.html { render :edit }
+      end
     end
   end
 

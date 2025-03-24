@@ -5,11 +5,7 @@
   <% @palettes.each do |palette| %>
     <div class="palette-item">
       <h3><%= palette.name %></h3>
-      
-      <div class="palette-preview" data-stops="<%= palette.colour_stops.order(:position).pluck(:percentage).to_json %>" 
-           data-colours="<%= palette.colour_stops.order(:position).pluck(:hex).to_json %>">
-      </div>
-      
+
       <div class="palette-actions">
         <%= link_to "View", palette_path(palette), class: "button" %>
         <%= link_to "Edit", edit_palette_path(palette), class: "button" %>
@@ -23,21 +19,3 @@
 <div class="actions">
   <%= link_to "Create New Palette", new_palette_path, class: "button" %>
 </div>
-
-<%= content_for :scripts do %>
-  <script>
-    document.addEventListener('turbo:load', () => {
-      document.querySelectorAll('.palette-preview').forEach(el => {
-        const stops = JSON.parse(el.dataset.stops);
-        const colours = JSON.parse(el.dataset.colours);
-        
-        // Create a gradient based on stops and colours
-        const gradientStops = stops.map((stop, index) => {
-          return `${colours[index]} ${stop * 100}%`;
-        }).join(', ');
-        
-        el.style.background = `linear-gradient(to right, ${gradientStops})`;
-      });
-    });
-  </script>
-<% end %>

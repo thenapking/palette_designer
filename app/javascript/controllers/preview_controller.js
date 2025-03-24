@@ -19,11 +19,11 @@ export default class extends Controller {
       window.pixelDensity    = dummy.pixelDensity.bind(dummy);
     }
 
-    
     this.p5Instance = new p5(this.sketch.bind(this), this.element);
   }
 
   disconnect() {
+    console.log("Preview controller disconnected");
     if (this.p5Instance) {
       this.p5Instance.remove();
     }
@@ -73,8 +73,8 @@ export default class extends Controller {
       }
 
         console.log("granulating")
-        window.p5grain.setup()
-        window.p5grain.granulateSimple(granularity);
+        // window.p5grain.setup()
+        // window.p5grain.granulateSimple(granularity);
     };
 
     function calculate_colours(basic_colours, steps) {

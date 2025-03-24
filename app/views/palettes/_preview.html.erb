@@ -1,3 +1,6 @@
-<div data-controller="preview"
+<div id="preview" data-controller="preview"
   data-preview-palette-value="<%= @palette.data.to_json %>">
+  <% puts "HELLO" %>
+  <% puts @palette.data.inspect %>
+  <pre><%= @palette.data.inspect %></pre>
 </div>
